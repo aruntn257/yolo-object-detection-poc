@@ -2,7 +2,7 @@ from fastapi import FastAPI, File, UploadFile, HTTPException
 from fastapi.responses import FileResponse
 from typing import List
 from pathlib import Path
-from object_detection.detect_img import detect_img, detect_brand
+from object_detection.detect_img import detect_img_obj, detect_brand
 from utils.image_handler import ImageHandler
 from utils.const_file import UPLOAD_DIR, ALLOWED_EXTENSIONS,RESULTS_DIR
 
@@ -61,7 +61,7 @@ async def detect_image_route(file: UploadFile = File(...)):
         
         try:
             # Run detection on the saved image
-            result = detect_img(file_path)
+            result = detect_img_obj(file_path)
             return result
         finally:
             # Delete the file after detect_img completes (whether it succeeds or fails)
@@ -90,7 +90,7 @@ async def detect_image_brand_route(file: UploadFile = File(...)):
         
         try:
             # Run object detection
-            img_result = detect_img(file_path)
+            img_result = detect_img_obj(file_path)
             
             # Run brand detection with the object detection result
             brand_result = detect_brand(img_result, file_path)
@@ -105,4 +105,4 @@ async def detect_image_brand_route(file: UploadFile = File(...)):
 
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run(app, host="0.0.0.0", port=8002)
+    uvicorn.run(app, host="0.0.0.0", port=8000)

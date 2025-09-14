@@ -5,7 +5,7 @@ from datetime import datetime
 from utils.file_handler import write_json_to_file
 
 
-def detect_img(img_path):
+def detect_img_obj(img_path):
     model = YOLO(OBJECT_DETECTION_MODEL_PATH)
 
     results = model(img_path)
@@ -63,6 +63,6 @@ def detect_brand(detect_result, img_path):
     return detect_result
 
 if __name__ == "__main__":
-    source = rf"\images\OIP_1.webp"
+    source = rf"images/OIP_1.webp"
     print(detect_img(source))
     print(detect_brand({}, source))

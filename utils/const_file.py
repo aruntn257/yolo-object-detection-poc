@@ -12,5 +12,5 @@ RESULTS_DIR = Path("results")
 ALLOWED_EXTENSIONS = {"jpg", "jpeg", "png", "gif", "bmp", "webp"}
 
 # Model paths
-OBJECT_DETECTION_MODEL_PATH = r"model\yolo11n.pt"
-BRAND_DETECTION_MODEL_PATH = r"model\runs\detect\train2\weights\last.pt"
+OBJECT_DETECTION_MODEL_PATH = r"model/yolo11n.pt"
+BRAND_DETECTION_MODEL_PATH = r"model/runs/detect/train2/weights/last.pt"
