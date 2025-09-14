@@ -1,9 +1,147 @@
-# yolo-object-detection-poc
+# YOLO Object Detection API
+
+A FastAPI-based REST API for object detection using YOLO (You Only Look Once) models. This project provides endpoints to upload images and detect objects in them using pre-trained YOLO models.
+
+## Features
+
+- Upload single or multiple images
+- Object detection using YOLOv8 nano model
+- Brand detection (for bottles)
+- Save detection results as images and JSON
+- Retrieve uploaded images
+- List all available images
+
+## Project Structure
+
+```
+├── DockerFile                # Docker configuration for deployment
+├── main.py                   # FastAPI application entry point
+├── requirements.txt          # Python dependencies
+├── images/                   # Sample images for testing
+├── model/                    # YOLO model files
+│   ├── yolo11n.pt            # YOLOv8 nano model
+│   ├── train_model.py        # Script for training models
+│   └── data_set/             # Training dataset
+├── object_detection/         # Object detection modules
+│   └── detect_img.py         # Detection functionality
+├── results/                  # Storage for detection results
+├── uploaded_images/          # Storage for uploaded images
+└── utils/                    # Utility functions
+    ├── const_file.py         # Constants and configurations
+    ├── file_handler.py       # File handling utilities
+    └── image_handler.py      # Image processing utilities
+```
+
+## Detection Capabilities
+
+The current version can detect the following objects:
+1. Cars
+2. Bikes
+3. Bicycles
+4. Bottles (with additional brand detection)
+
+## Installation
+
+### Prerequisites
+
+- Python 3.12
+- Virtual environment (recommended)
+
+### Setup
+
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/aruntn257/yolo-object-detection-poc.git
+   cd yolo-object-detection-poc
+   ```
+
+2. Create and activate a virtual environment:
+   ```bash
+   python -m venv yolo-venv
+   # On Windows:
+   yolo-venv\Scripts\Activate.ps1
+   # On Linux/Mac:
+   source yolo-venv/bin/activate
+   ```
+
+3. Install dependencies:
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+4. Run the application:
+   ```bash
+   uvicorn main:app --reload
+   ```
+
+The API will be available at http://localhost
+
+## Docker Deployment
+
+You can also run the application using Docker:
+
+1. Build the Docker image:
+   ```bash
+   docker build -t yolo-detection-api -f DockerFile .
+   ```
+
+2. Run the container:
+   ```bash
+   docker run -p 8000:8000 yolo-detection-api
+   ```
+
+## API Endpoints
+
+- `GET /`: Root endpoint with API information
+- `POST /detect_img/`: Upload and detect objects in an image
+- `POST /upload/`: Upload a single image
+- `POST /upload/batch/`: Upload multiple images
+- `GET /images/{image_name}`: Retrieve a specific image
+- `GET /images/`: List all available images
 
 
 
+## Example Usage
 
-Docker run
-docker build -t yolo-detection-api -f DockerFile .
+### Object Detection
 
-docker run -p 8000:8000 yolo-detection-api
+```python
+import requests
+
+# API endpoint
+url = "http://localhost/detect_img/"
+
+# Image file to upload
+files = {"file": ("car.jpg", open("path/to/car.jpg", "rb"), "image/jpeg")}
+
+# Make the request
+response = requests.post(url, files=files)
+
+# Print the detection results
+print(response.json())
+```
+
+Example response:
+```json
+{
+  "image_detected": ["car"],
+  "confidence_score": [0.92]
+}
+```
+
+## Development
+
+The project is organized following best practices for FastAPI applications:
+- Core functionality is separated into modules
+- Constants are centralized in a single file
+- Error handling with proper HTTP status codes
+- Type annotations for better IDE support and documentation
+
+## License
+
+This project is licensed under the MIT License - see the LICENSE file for details.
+
+## Acknowledgments
+
+- This project uses [Ultralytics YOLOv8](https://github.com/ultralytics/ultralytics) for object detection
+- Built with [FastAPI](https://fastapi.tiangolo.com/)
