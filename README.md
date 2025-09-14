@@ -74,7 +74,7 @@ The current version can detect the following objects:
    uvicorn main:app --reload
    ```
 
-The API will be available at http://localhost
+The API will be available at http://localhost:8000
 
 ## Docker Deployment
 
@@ -90,15 +90,71 @@ You can also run the application using Docker:
    docker run -p 8000:8000 yolo-detection-api
    ```
 
-## API Endpoints
+## Training Custom YOLO Models
 
-- `GET /`: Root endpoint with API information
-- `POST /detect_img/`: Upload and detect objects in an image
-- `POST /upload/`: Upload a single image
-- `POST /upload/batch/`: Upload multiple images
-- `GET /images/{image_name}`: Retrieve a specific image
-- `GET /images/`: List all available images
+The project includes functionality to train custom YOLO models for specific object detection tasks.
 
+### Training Prerequisites
+
+- Python 3.12 or later
+- Ultralytics package installed (pip install ultralytics)
+- Training dataset organized in YOLO format
+- GPU with CUDA support (recommended for faster training)
+
+### Dataset Structure
+
+The dataset should be organized as follows within the 'model' folder:
+
+```
+model/
+├── train_model.py          # Training script
+├── data_set/
+│   ├── data.yaml           # Dataset configuration file
+│   ├── train/
+│   │   ├── images/         # Training images
+│   │   └── labels/         # Training labels in YOLO format
+│   ├── valid/
+│   │   ├── images/         # Validation images
+│   │   └── labels/         # Validation labels in YOLO format
+│   └── test/
+│       ├── images/         # Test images
+│       └── labels/         # Test labels in YOLO format
+```
+
+### Model Training Steps
+
+1. Activate your Python environment:
+   ```bash
+   # Windows
+   yolo-venv\Scripts\Activate.ps1
+   
+   # Linux/Mac
+   source yolo-venv/bin/activate
+   ```
+
+2. Navigate to the model directory:
+   ```bash
+   cd model
+   ```
+
+
+3. Run the training script:
+   ```bash
+   python train_model.py
+   ```
+
+
+6. After training completes, your model will be saved in:
+   ```
+   model/runs/detect/train/weights/
+   ├── best.pt              # Best weights according to validation metrics
+   └── last.pt              # Final weights after training
+   ```
+
+7. To use your new model, update the model path in utils/const_file.py:
+   ```python
+   OBJECT_DETECTION_MODEL_PATH = r"model/runs/detect/train/weights/best.pt"
+   ```
 
 
 ## Example Usage
@@ -109,7 +165,7 @@ You can also run the application using Docker:
 import requests
 
 # API endpoint
-url = "http://localhost/detect_img/"
+url = "http://localhost:8000/detect_img/"
 
 # Image file to upload
 files = {"file": ("car.jpg", open("path/to/car.jpg", "rb"), "image/jpeg")}
